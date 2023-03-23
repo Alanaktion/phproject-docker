@@ -1,0 +1,65 @@
+tags:
+  demo: true
+  docs: false
+
+# Demo site
+apache:
+  image:
+    repository: alanaktion/phproject
+    tag: apache
+  ingress:
+    enabled: true
+    hostname: demo.phproject.org
+  extraVolumes:
+    - name: uploads
+      emptyDir: {}
+  extraVolumeMounts:
+    - name: uploads
+      mountPath: /var/www/html/uploads
+
+mariadb:
+  auth:
+    database: phproject
+    username: phproject
+    password: demo
+    rootPassword: demo
+  primary:
+    persistence:
+      enabled: true
+      storageClass: ""
+      accessModes:
+        - ReadWriteOnce
+      size: 10Gi
+
+# Docs site
+nginx:
+  cloneStaticSiteFromGit:
+    enabled: true
+    repository: https://github.com/Alanaktion/phproject.git
+    branch: gh-pages
+    interval: 3600
+    # TODO: run incremental jekyll build after clone and sync
+    # gitSync:
+    #   command:
+    #     - /bin/bash
+    #     - -ec
+    #     - |
+    #       [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
+    #       while true; do
+    #         cd /app && git pull origin gh-pages
+    #         sleep 3600
+    #       done
+  ingress:
+    enabled: true
+    hostname: www.phproject.org
+    extraHosts:
+      - name: phproject.org
+        path: /
+  # TODO: configure nginx to serve _site build dir
+  # serverBlock: |-
+  # server {
+  #   listen 0.0.0.0:8080;
+  #   location / {
+  #     return 200 "hello!";
+  #   }
+  # }
