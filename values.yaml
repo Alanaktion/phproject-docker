@@ -13,6 +13,8 @@ apache:
     https: 443
   containerSecurityContext:
     enabled: false
+  podSecurityContext:
+    fsGroup: 33
   ingress:
     enabled: true
     hostname: demo.phproject.org
