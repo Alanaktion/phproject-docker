@@ -71,6 +71,35 @@ http {
 
 Once started, you can use the web interface to complete the Phproject installation. Use `db` as your database host, with the configured database/user/password, if you're using the example `docker-compose.yml` from above.
 
+### Production
+
+Production-ready Apache server images with Phproject code included are built in the "release" directory. The [`alanaktion/phproject` image](https://hub.docker.com/r/alanaktion/phproject) on Docker Hub includes `apache-x.y.z` tags for each supported Phproject release, and an `apache` tag for the latest release build. These images include the PHP code and dependencies, allowing you to run the image directly without needing to have the Phproject code on the local filesystem. File uploads will be stored in the container unless a volume is mapped for the uploads directory.
+
+For a simple Docker Compose setup using release images:
+
+```yml
+services:
+  phproject:
+    # You can omit the version number suffix to always run the latest production release code
+    image: alanaktion/phproject:apache-1.7.14
+    ports:
+      - 80:80
+    volumes:
+      - uploads:/var/www/phproject/uploads
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: phproject
+      MYSQL_USER: phproject
+      MYSQL_PASSWORD: secret
+    volumes:
+      - db:/var/lib/mysql
+volumes:
+  uploads:
+  db:
+```
+
 ## Building
 
 To build and push this image:
