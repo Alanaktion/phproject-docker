@@ -21,9 +21,13 @@ apache:
   extraVolumes:
     - name: uploads
       emptyDir: {}
+    - name: tmp
+      emptyDir: {}
   extraVolumeMounts:
     - name: uploads
       mountPath: /var/www/html/uploads
+    - name: tmp
+      mountPath: /var/www/html/tmp
 
 mariadb:
   auth:
