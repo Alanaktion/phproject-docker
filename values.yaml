@@ -7,7 +7,7 @@ apache:
   image:
     repository: alanaktion/phproject
     tag: apache
-    pullPolicy: always
+    pullPolicy: Always
   containerPorts:
     http: 80
     https: 443
