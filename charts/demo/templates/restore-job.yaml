@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "demo.fullname" . }}-restore
+  labels:
+    {{- include "demo.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ include "demo.fullname" . }}-restore
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: restore
+        image: mariadb:latest
+        command: ["sh", "-c", "exec mysql -h {{ .Release.Name }}-mariadb -u{{ .Values.mariadb.user }} -p{{ .Values.mariadb.password }} {{ .Values.mariadb.database }} < /data/demo.sql"]
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: data
+        configMap:
+          name: {{ include "demo.fullname" . }}-data

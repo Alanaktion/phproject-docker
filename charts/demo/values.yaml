@@ -77,3 +77,8 @@ persistence:
     - ReadWriteOnce
   size: 10Gi
   annotations: {}
+
+mariadb:
+  user: phproject
+  password: demo
+  database: phproject

@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "demo.fullname" . }}-cron
+  labels:
+    {{- include "demo.labels" . | nindent 4 }}
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+    template:
+      spec:
+        restartPolicy: Never
+        containers:
+        - name: restore
+          image: mariadb:latest
+          command: ["sh", "-c", "exec mysql -h {{ .Release.Name }}-mariadb -u{{ .Values.mariadb.user }} -p{{ .Values.mariadb.password }} {{ .Values.mariadb.database }} < /data/demo.sql"]
+          volumeMounts:
+          - name: data
+            mountPath: /data
+        volumes:
+        - name: data
+          configMap:
+            name: {{ include "demo.fullname" . }}-data
