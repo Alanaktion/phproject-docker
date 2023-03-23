@@ -12,8 +12,7 @@ git clone https://github.com/Alanaktion/phproject.git --branch "$version" --sing
 
 pushd src
 
-if ! command -v composer &> /dev/null
-then
+if [ -z $(which composer) ]; then
     curl -o composer.phar -L https://getcomposer.org/composer-stable.phar
     $composer = "php composer.phar"
 else
