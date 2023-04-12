@@ -23,11 +23,41 @@ apache:
       emptyDir: {}
     - name: tmp
       emptyDir: {}
+    - name: config
+      configMap:
+        name: phproject-config
   extraVolumeMounts:
     - name: uploads
       mountPath: /var/www/html/uploads
     - name: tmp
       mountPath: /var/www/html/tmp
+    - name: config
+      mountPath: /var/www/html/config.php
+      subPath: config.php
+  extraDeploy:
+    - |
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: phproject-config
+        labels: {{- include "common.labels.standard" . | nindent 6 }}
+          {{- if .Values.commonLabels }}
+          {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 6 }}
+          {{- end }}
+        {{- if .Values.commonAnnotations }}
+        annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 6 }}
+        {{- end }}
+      data:
+        config.php: |-
+          <?php
+          return [
+            'db.host' => 'phproject-mariadb',
+            'db.port' => '3306',
+            'db.user' => 'phproject',
+            'db.pass' => 'demo',
+            'db.name' => 'phproject',
+            'site.url' => 'https://demo.phproject.org/',
+          ];
 
 mariadb:
   auth:
