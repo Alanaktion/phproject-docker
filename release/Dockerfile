@@ -10,3 +10,4 @@ RUN set -ex; \
     a2enmod rewrite
 
 RUN echo 'upload_max_filesize = 1024M' > /usr/local/etc/php/conf.d/limits.ini
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"

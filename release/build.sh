@@ -1,6 +1,8 @@
 #!/bin/bash
 # Build a release image for phproject
 
+set -e
+
 if [ -n "$1" ]; then
     version="$1"
 else
@@ -14,9 +16,9 @@ pushd src
 
 if [ -z $(which composer) ]; then
     curl -o composer.phar -L https://getcomposer.org/composer-stable.phar
-    $composer = "php composer.phar"
+    composer="php composer.phar"
 else
-    $composer = "composer"
+    composer="composer"
 fi
 $composer install --no-ansi --no-interaction --no-dev
 
@@ -25,8 +27,7 @@ rm -f composer.phar
 
 popd
 
-docker buildx create --use
-docker buildx ls
+docker buildx ls || docker buildx create --use
 
 platform="linux/amd64,linux/arm/v7,linux/arm64"
 image="alanaktion/phproject"
