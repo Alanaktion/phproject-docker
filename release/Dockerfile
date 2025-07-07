@@ -1,5 +1,4 @@
 FROM php:8.4-apache
-COPY src/ /var/www/html/
 
 RUN set -ex; \
     apt-get update; \
@@ -9,5 +8,6 @@ RUN set -ex; \
     rm -rf /var/lib/apt/lists/* && \
     a2enmod rewrite
 
+COPY --chown=33:33 src/ /var/www/html/
 RUN echo 'upload_max_filesize = 1024M' > /usr/local/etc/php/conf.d/limits.ini
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"

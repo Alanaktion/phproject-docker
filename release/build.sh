@@ -13,18 +13,12 @@ rm -rf src
 git clone https://github.com/Alanaktion/phproject.git --branch "$version" --single-branch --depth 1 src
 
 pushd src
-
-if [ -z $(which composer) ]; then
-    curl -o composer.phar -L https://getcomposer.org/composer-stable.phar
-    composer="php composer.phar"
-else
-    composer="composer"
-fi
-$composer install --no-ansi --no-interaction --no-dev
-
+docker run --rm \
+    --volume $PWD:/app \
+    --user $(id -u):$(id -g) \
+    composer install --no-ansi --no-interaction --no-dev
 rm -rf .git* .vscode
 rm -f composer.phar
-
 popd
 
 docker buildx ls || docker buildx create --use
