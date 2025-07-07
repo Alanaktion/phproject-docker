@@ -28,4 +28,4 @@ jobs:
       - name: Run release build
         run: |
           cd release
-          ./build.sh ${{ inputs.tags }}
+          ./build.sh ${{ inputs.tag }}
