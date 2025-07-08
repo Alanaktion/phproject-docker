@@ -28,9 +28,15 @@ image="alanaktion/phproject"
 if [ $version = "master" ]; then
     docker buildx build \
         --platform "$platform" \
-        --tag "$image:apache-master" --push .
+        --tag "docker.io/$image:apache-master" \
+        --tag "ghcr.io/$image:apache-master" \
+        --push .
 else
     docker buildx build \
         --platform "$platform" \
-        --tag "$image:apache-${version:1}" --tag "$image:apache" --push .
+        --tag "docker.io/$image:apache-${version:1}" \
+        --tag "docker.io/$image:apache" \
+        --tag "ghcr.io/$image:apache-${version:1}" \
+        --tag "ghcr.io/$image:apache" \
+        --push .
 fi

@@ -1,4 +1,4 @@
-FROM php:8.4-apache
+FROM docker.io/library/php:8.4-apache
 
 RUN set -ex; \
     apt-get update; \

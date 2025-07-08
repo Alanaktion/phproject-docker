@@ -1,4 +1,4 @@
-FROM php:8.4-fpm
+FROM docker.io/library/php:8.4-fpm
 
 RUN set -ex; \
     apt-get update; \
