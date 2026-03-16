@@ -1,10 +1,6 @@
 FROM docker.io/library/php:8.4-fpm
 
-RUN set -ex; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends libfreetype6-dev libjpeg-dev libpng-dev libzip-dev unzip; \
-    docker-php-ext-configure gd --with-freetype --with-jpeg; \
-    docker-php-ext-install -j$(nproc) exif gd zip pdo pdo_mysql intl; \
-    rm -rf /var/lib/apt/lists/*
+COPY --from=ghcr.io/mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions exif gd zip pdo_mysql intl xdebug
 
 RUN echo 'upload_max_filesize = 1024M' > /usr/local/etc/php/conf.d/limits.ini
